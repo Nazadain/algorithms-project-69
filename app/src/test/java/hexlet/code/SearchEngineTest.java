@@ -34,16 +34,18 @@ public class SearchEngineTest {
         assertNotNull(SearchEngine.search(maps, ""));
 
         assertLinesMatch(
-                SearchEngine.search(new ArrayList<>(), "that"),
-                new ArrayList<>()
-        );
-        assertLinesMatch(
-                SearchEngine.search(maps, ""),
-                new ArrayList<>()
-        );
-        assertLinesMatch(
-                SearchEngine.search(maps, "shoot"),
+                SearchEngine.search(maps, "shoot!"),
                 List.of("doc1", "doc2")
+        );
+
+        assertLinesMatch(
+                SearchEngine.search(maps, "pint"),
+                List.of("doc1")
+        );
+
+        assertLinesMatch(
+                SearchEngine.search(maps, "pint!"),
+                List.of("doc1")
         );
     }
 }
