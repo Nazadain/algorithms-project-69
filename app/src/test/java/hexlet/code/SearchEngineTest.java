@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class SearchEngineTest {
 
-    private List<Map<String, String>> maps;
+    private List<Map<String, String>> docs;
 
     String doc1 = "I can't shoot straight unless I've had a pint!";
     String doc2 = "Don't shoot shoot shoot that thing at me.";
@@ -19,7 +19,7 @@ public class SearchEngineTest {
 
     @BeforeEach
     public void beforeEach() {
-        maps = List.of(
+        docs = List.of(
                 Map.of("id", "doc1", "text", doc1),
                 Map.of("id", "doc2", "text", doc2),
                 Map.of("id", "doc3", "text", doc3)
@@ -29,22 +29,22 @@ public class SearchEngineTest {
     @Test
     public void searchTest() {
 
-        assertNotNull(SearchEngine.search(maps, "shoot"));
+        assertNotNull(SearchEngine.search(docs, "shoot"));
         assertNotNull(SearchEngine.search(new ArrayList<>(), "shoot"));
-        assertNotNull(SearchEngine.search(maps, ""));
+        assertNotNull(SearchEngine.search(docs, ""));
 
         assertLinesMatch(
-                SearchEngine.search(maps, "shoot"),
-                List.of("doc1", "doc2")
+                SearchEngine.search(docs, "shoot"),
+                List.of("doc2", "doc1")
         );
 
         assertLinesMatch(
-                SearchEngine.search(maps, "pint"),
+                SearchEngine.search(docs, "pint"),
                 List.of("doc1")
         );
 
         assertLinesMatch(
-                SearchEngine.search(maps, "pint!"),
+                SearchEngine.search(docs, "pint!"),
                 List.of("doc1")
         );
     }

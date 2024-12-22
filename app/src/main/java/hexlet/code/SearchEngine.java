@@ -15,25 +15,38 @@ public class SearchEngine {
             return result;
         }
 
+        Map<String, Integer> resultMap = new HashMap<>();
+
         for (Map<String, String> map : list) {
             String id = map.get("id");
             String text = map.get("text");
 
-            if (isTextContainsWord(text, candidate)) {
-                result.add(id);
+            int wordsCount = wordRepetitionsInText(text, candidate);
+
+            if (wordsCount > 0) {
+                resultMap.put(id, wordsCount);
             }
         }
+
+        resultMap.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .forEach(e -> result.add(e.getKey()));
+
         return result;
     }
 
-    private static boolean isTextContainsWord(String text, String candidate) {
+    private static int wordRepetitionsInText(String text, String candidate) {
         String term = createTerm(candidate);
 
         String regex = "\\b" + term + "\\b";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(text);
+        int wordsCount = 0;
 
-        return matcher.find();
+        while (matcher.find()) {
+            wordsCount++;
+        }
+        return wordsCount;
     }
 
     private static String createTerm(String word) {
