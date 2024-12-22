@@ -1,9 +1,8 @@
 package hexlet.code;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.MatchResult;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -28,23 +27,13 @@ public class SearchEngine {
     }
 
     private static boolean isTextContainsWord(String text, String candidate) {
-        String[] words = text.split(" ");
+        String term = createTerm(candidate);
 
+        String regex = "\\b" + term + "\\b";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(text);
 
-        for (String word : words) {
-
-            if (word.contains(candidate)) {
-                return true;
-            } else {
-                String candidateTerm = createTerm(candidate);
-                String wordTerm = createTerm(word);
-
-                if (wordTerm.equals(candidateTerm)) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return matcher.find();
     }
 
     private static String createTerm(String word) {

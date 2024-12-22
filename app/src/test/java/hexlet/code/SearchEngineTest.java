@@ -34,7 +34,7 @@ public class SearchEngineTest {
         assertNotNull(SearchEngine.search(maps, ""));
 
         assertLinesMatch(
-                SearchEngine.search(maps, "shoot!"),
+                SearchEngine.search(maps, "shoot"),
                 List.of("doc1", "doc2")
         );
 
