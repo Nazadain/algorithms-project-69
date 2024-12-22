@@ -47,5 +47,10 @@ public class SearchEngineTest {
                 SearchEngine.search(docs, "pint!"),
                 List.of("doc1")
         );
+
+        assertLinesMatch(
+                SearchEngine.search(docs, "shoot at me"),
+                List.of("doc2", "doc1")
+        );
     }
 }

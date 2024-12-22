@@ -15,28 +15,55 @@ public class SearchEngine {
             return result;
         }
 
-        Map<String, Integer> resultMap = new HashMap<>();
+        List<Match> matches = new ArrayList<>();
 
         for (Map<String, String> map : list) {
             String id = map.get("id");
             String text = map.get("text");
 
-            int wordsCount = subStrRepetitionsInText(text, candidate);
+            Match match = createMatchIfTextContainsCandidate(id, text, candidate);
 
-            if (wordsCount > 0) {
-                resultMap.put(id, wordsCount);
-                resultMap.put("exactly", 2);
+            if (match != null) {
+                matches.add(match);
             }
         }
 
-        resultMap.entrySet().stream()
-                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                .forEach(e -> result.add(e.getKey()));
+        matches.sort(Match::compareTo);
+
+        for (Match match : matches) {
+            result.add(match.getId());
+        }
 
         return result;
     }
 
-    private static int subStrRepetitionsInText(String text, String candidate) {
+    private static Match createMatchIfTextContainsCandidate(String id, String text, String candidate) {
+
+        int exactMatches = calculateWordRepeatsInText(text, candidate);
+        int inexactMatches = 0;
+
+        String[] words = candidate.split(" ");
+
+        if (words.length < 2) {
+            if (exactMatches != 0) {
+                return new Match(id, exactMatches, 0);
+            } else {
+                return null;
+            }
+        }
+
+        for (String word : words) {
+            inexactMatches += calculateWordRepeatsInText(text, word);
+        }
+
+        if (exactMatches == 0 && inexactMatches == 0) {
+            return null;
+        }
+
+        return new Match(id, exactMatches, inexactMatches);
+    }
+
+    private static int calculateWordRepeatsInText(String text, String candidate) {
         String term = createTerm(candidate);
 
         String regex = "\\b" + term + "\\b";
@@ -56,5 +83,36 @@ public class SearchEngine {
                 .results()
                 .map(MatchResult::group)
                 .collect(Collectors.joining());
+    }
+
+    public static class Match implements Comparable<Match> {
+        private final String id;
+        private final int exactCount;
+        private final int inexactCount;
+
+        public Match(String id, int exactCount, int inexactCount) {
+            this.id = id;
+            this.exactCount = exactCount;
+            this.inexactCount = inexactCount;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        @Override
+        public int compareTo(Match o) {
+            int exactCompare = Integer.compare(o.exactCount, this.exactCount);
+            return exactCompare != 0 ? exactCompare : Integer.compare(o.inexactCount, this.inexactCount);
+        }
+
+        @Override
+        public String toString() {
+            return "Match{" +
+                    "id='" + id + '\'' +
+                    ", exactCount=" + exactCount +
+                    ", inexactCount=" + inexactCount +
+                    '}';
+        }
     }
 }
