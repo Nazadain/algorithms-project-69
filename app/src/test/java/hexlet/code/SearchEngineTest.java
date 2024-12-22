@@ -13,16 +13,16 @@ public class SearchEngineTest {
 
     private List<Map<String, String>> docs;
 
-    String doc1 = "I can't shoot straight unless I've had a pint!";
-    String doc2 = "Don't shoot shoot shoot that thing at me.";
-    String doc3 = "I'm your shooter.";
+    private static final String DOC_1 = "I can't shoot straight unless I've had a pint!";
+    private static final String DOC_2 = "Don't shoot shoot shoot that thing at me.";
+    private static final String DOC_3 = "I'm your shooter.";
 
     @BeforeEach
     public void beforeEach() {
         docs = List.of(
-                Map.of("id", "doc1", "text", doc1),
-                Map.of("id", "doc2", "text", doc2),
-                Map.of("id", "doc3", "text", doc3)
+                Map.of("id", "doc1", "text", DOC_1),
+                Map.of("id", "doc2", "text", DOC_2),
+                Map.of("id", "doc3", "text", DOC_3)
         );
     }
 

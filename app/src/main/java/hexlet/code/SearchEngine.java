@@ -21,10 +21,11 @@ public class SearchEngine {
             String id = map.get("id");
             String text = map.get("text");
 
-            int wordsCount = wordRepetitionsInText(text, candidate);
+            int wordsCount = subStrRepetitionsInText(text, candidate);
 
             if (wordsCount > 0) {
                 resultMap.put(id, wordsCount);
+                resultMap.put("exactly", 2);
             }
         }
 
@@ -35,7 +36,7 @@ public class SearchEngine {
         return result;
     }
 
-    private static int wordRepetitionsInText(String text, String candidate) {
+    private static int subStrRepetitionsInText(String text, String candidate) {
         String term = createTerm(candidate);
 
         String regex = "\\b" + term + "\\b";
